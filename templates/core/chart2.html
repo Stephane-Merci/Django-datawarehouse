@@ -1,0 +1,130 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block content2 %}
+    <form method="POST" class="d-none d-md-flex ms-4">
+        {% csrf_token %}
+        <input class="form-control border-0" type="" name = "town" placeholder="Enter the town">
+    </form>
+{% endblock content2 %}
+{% block content %}       
+    <!-- Chart Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4"> 
+            <div class="col-12">
+                <div class="bg-light rounded h-100 p-4">
+                    <h6 class="mb-4">{{ town }}</h6>
+                    <canvas id="worldwide-sales2"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-5">
+            <div class="col-12">
+                <div class="bg-light rounded h-100 p-4">
+                    <h6 class="mb-4">{{ town }}</h6>
+                    <div>
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <!-- Chart End -->
+{% endblock content %}
+
+
+{% block chart %}
+    <script>
+        var item_type = "{{ item_type|safe }}"
+        item_type = item_type.slice(1,-1).split(", ");
+        console.log(item_type);
+
+        var label = "{{ month|safe }}"
+        label = label.slice(1,-1).split(", ")
+        console.log(label)
+        console.log(typeof(label))
+
+        data0 = "{{ data0|safe }}"
+        data1 = "{{ data1|safe }}"
+        data2 = "{{ data2|safe }}"
+        data3 = "{{ data3|safe }}"
+        data4 = "{{ data4|safe }}"
+
+        data0 = data0.split(", ")
+        data1 = data1.split(", ")
+        data2 = data2.split(", ")
+        data3 = data3.split(", ")
+        data4 = data4.split(", ")
+
+        console.log(data0, data1, data2, data3, data4)
+
+        // Multiple Bar charts
+
+    var ctx1 = $("#worldwide-sales2").get(0).getContext("2d");
+    var myChart1 = new Chart(ctx1, {
+        type: "bar",
+        data: {
+            labels: label,
+            datasets: [{
+                    label: item_type[0],
+                    data: [data0[0].slice(1), data0[1], data0[2], data0[3], data0[4], data0[5], data0[6], data0[7], data0[8], data0[9], data0[10], data0[11].slice(0,1),],
+                    backgroundColor: "green"
+                },
+                {
+                    label: item_type[1],
+                    data: [data1[0].slice(1), data1[1], data1[2], data1[3], data1[4], data1[5], data1[6], data1[7], data1[8], data1[9], data1[10], data1[11].slice(0,1)],
+                    backgroundColor: "red"
+                },
+                {
+                    label: item_type[2],
+                    data: [data2[0].slice(1), data2[1], data2[2], data2[3], data2[4], data2[5], data2[6], data2[7], data2[8], data2[9], data2[10], data2[11].slice(0,1)],
+                    backgroundColor: "yellow"
+                },
+                {
+                    label: item_type[3],
+                    data: [data3[0].slice(1), data3[1], data3[2], data3[3], data3[4], data3[5], data3[6], data3[7], data3[8], data3[9], data3[10], data3[11].slice(0,1)],
+                    backgroundColor: "rgba(0, 156, 255, .9)"
+                },
+                {
+                    label: item_type[4],
+                    data: [data4[0].slice(1), data4[1], data4[2], data4[3], data4[4], data4[5], data4[6], data4[7], data4[8], data4[9], data4[10], data4[11].slice(0,1)],
+                    backgroundColor: "grey"
+                }
+            ]
+            },
+        options: {
+            responsive: true,
+        
+        }
+    });
+
+        //Single Line chart
+        var total = "{{ total_order|safe }}"
+            total = total.split(", ");
+            console.log(total)
+
+            const data = {
+                labels: item_type,
+                datasets: [{
+                    labels: 'Warehouse prj',
+                    backgroundColor:'rgb(255, 99, 132)',
+                    borderColor:'rgb(255, 99, 132)',
+                    data: [total[0].slice(1), total[1], total[2],total[3], total[4].slice(0,-1)],
+                }]
+            };
+            
+            const config = {
+                type: 'line',
+                data : data,
+                options: {}
+            };
+
+            const myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+    </script>
+{% endblock chart %}
+                
